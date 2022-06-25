@@ -51,6 +51,55 @@ Hint: Make a few animals using Rails Console
 ```
 ### Branch animal-model end
 
+### Branch sighting-model begin
+6. Story: As the consumer of the API I can create a sighting of an animal with date (use the datetime datatype), a latitude, and a longitude.
+
+```
+$ rails g resource Sighting date:datetime latitude:decimal longitude:decimal animal_id:integer
+```
+>File path: app/models/animal.rb
+```ruby
+class Animal < ApplicationRecord
+    has_many :sightings
+end
+```
+>File path: app/models/sigthing.rb
+```ruby
+class Sighting < ApplicationRecord
+    belongs_to :animal
+end
+```
+7. Story: As the consumer of the API I can update an animal sighting in the database.
+>File path: app/controllers/sightings_contoller.rb
+```ruby
+    def update
+        sighting = Sighting.find(params[:id])
+        if sighting.update(sighting_params)
+            render json: sighting
+        else
+            render json: sighting.errors
+        end
+    end
+```
+
+8. Story: As the consumer of the API I can destroy an animal sighting in the database.
+>File path: app/controllers/sightings_contoller.rb
+```ruby
+    def destroy
+        sighting = Sighting.find(params[:id])
+        sightings = Sighting.all
+        sighting.destroy
+        render json: sightings
+```
+9. Story: As the consumer of the API, when I view a specific animal, I can also see a list sightings of that animal.
+>File path: app/controllers/animals_contoller.rb
+```ruby
+    def show
+        animal = Animal.find(params[:id])      
+        render json: animal.as_json(include: :sightings)  #this
+    end
+```
+
 
 
 
